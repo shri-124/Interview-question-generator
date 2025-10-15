@@ -36,3 +36,11 @@ This project is ideal as a **1-day LangChain demo** that showcases:
 
 ## 🏗️ Folder Structure
 
+interview-gen/
+├─ app.py # Streamlit UI
+├─ app_core.py # Core logic for generation
+├─ tests/
+│ └─ test_app_core.py # Unit tests (pytest)
+├─ requirements.txt
+├─ requirements-dev.txt
+└─ .env
