@@ -1,6 +1,6 @@
 # 🧠 Interview Question Generator
 
-A simple **LangChain + Streamlit** app that automatically generates interview questions tailored to a **job title** or **technical topic** — with adjustable difficulty and question count.
+A simple **LangChain + Streamlit** app that automatically generates interview questions tailored to a **job title** or **technical topic** — with adjustable difficulty and question count. AT THE MOMENT I HAVE REMOVED THE API KEY TO NOT WASTE TOKENS
 
 This project is ideal as a **1-day LangChain demo** that showcases:
 - LLMChain + PromptTemplate
