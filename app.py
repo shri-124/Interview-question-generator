@@ -3,11 +3,16 @@ import streamlit as st
 from dotenv import load_dotenv
 from app_core import generate_questions
 
+if "OPENAI_API_KEY" in st.secrets:
+    os.environ["OPENAI_API_KEY"] = st.secrets["OPENAI_API_KEY"]
+
+DEMO_MODE = not bool(os.getenv("OPENAI_API_KEY"))
+
 load_dotenv()
 st.set_page_config(page_title="Interview Question Generator", page_icon="🧠", layout="centered")
 
 st.title("🧠 Interview Question Generator")
-st.caption("Powered by LangChain + OpenAI")
+st.caption("Powered by LangChain + OpenAI. App is in DEMO MODE to save tokens and all responses are pre written from ChatGPT.")
 
 with st.sidebar:
     st.header("Controls")
@@ -27,16 +32,37 @@ with st.sidebar:
 if st.button("Generate Questions", type="primary", use_container_width=True):
     try:
         with st.spinner("Crafting questions..."):
-            result = generate_questions(
-                topic=topic,
-                count=count,
-                difficulty=difficulty,
-                categories=categories,
-                ensure_diversity=ensure_diversity,
-                include_followups=include_followups,
-                temperature=temperature,
-                model_name=model_name,
-            )
+            if DEMO_MODE:
+                # simple offline fake output so the UI still works
+                demo = ["Explain the difference between server-side rendering (SSR) and client-side rendering (CSR) in Next.js. When would you choose one over the other?",
+                        "How does React's virtual DOM improve performance?", "What are React hooks? Can you describe how useEffect and useMemo differ?",
+                        "Walk me through how you would design a REST API endpoint for a “user signup” feature. How would you handle input validation, password security, and error responses?",
+                        "What are middleware functions in Express.js, and how are they typically used?",
+                        "How would you debug a production API that occasionally returns 500 errors with no clear logs?",
+                        "Compare SQL and NoSQL databases. When would you pick one over the other?",
+                        "How would you integrate Redis or another caching system to improve performance?",
+                        "Describe a time you built and deployed a full-stack application end-to-end. What challenges did you face and how did you overcome them?",
+                        "How do you handle version control, code reviews, and CI/CD in your development workflow?",
+                        "How do you ensure your code is maintainable and testable in a large project?"
+                        ]
+                for i in range(1, count + 1):
+                    q = f"Q{i}: ({difficulty}/5) Draft a question related to '{topic}' " \
+                        f"covering {', '.join(categories) if categories else 'general fundamentals'}."
+                    if include_followups:
+                        q += "\nHint: Think about core principles and trade-offs."
+                    demo.append(q)
+                result = "\n\n".join(demo)
+            else:
+                result = generate_questions(
+                    topic=topic,
+                    count=count,
+                    difficulty=difficulty,
+                    categories=categories,
+                    ensure_diversity=ensure_diversity,
+                    include_followups=include_followups,
+                    temperature=temperature,
+                    model_name=model_name,
+                )
         st.subheader("Generated Questions")
         st.write(result)
         st.download_button(
